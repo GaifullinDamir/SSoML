@@ -15,7 +15,7 @@ namespace program
         private const string NP = "-."; //усечённая разность
 
         private static List<char> permittedSymbolsForFunction = new List<char>() { '(', ')', '_', '/', 'x', 'y' };
-        private static HashSet<string> forbiddenCombs = new HashSet<string>() { "", "_)", "(_", "/_", "xy", "yx" };
+        private static HashSet<string> forbiddenCombs = new HashSet<string>() { "", "_)", "(_", "/_", "xy", "yx", "xx", "yy" };
 
         public Computing()
         {
@@ -154,11 +154,12 @@ namespace program
                         current = keysList[keysList.IndexOf(current) - 1];
                     }
                 }
-                if(bracketsDict.Values.ToList().Contains(-1))
-                {
-                    check = false;
-                    return;
-                }
+                
+            }
+            if (bracketsDict.Values.ToList().Contains(-1))
+            {
+                check = false;
+                return;
             }
         }   
             
