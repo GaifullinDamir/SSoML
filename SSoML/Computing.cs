@@ -17,11 +17,14 @@ namespace program
         private static List<char> permittedSymbolsForFunction = new List<char>() { '(', ')', '_', '/', 'x', 'y' };
         private static HashSet<string> forbiddenCombs = new HashSet<string>() { "", "_)", "(_", "/_", "xy", "yx" };
 
-        private int[] firstColumn;
-        private int[] secondColumn;
         public Computing()
         {
 
+        }
+
+        public static int Multiple(int x, int factor, int k)
+        {
+            return (factor * x) % k;
         }
         public static int PostsNegation(int x, int k)
         {
@@ -62,5 +65,78 @@ namespace program
                 }
             }
         }
+
+        public static void ResultColumn(int k, ref int[] resultColumn, int[] firstColumn, int[] secondColumn)
+        {
+
+            resultColumn = new int[k * k];
+            for (int i = 0; i < k * k; i++)
+            {
+                resultColumn[i] = TrunDifference(Multiple(firstColumn[i], 2, k), secondColumn[i]);
+            }
+        }
+
+        public static void FormulaEnter(ref bool check)
+        {
+            Console.Write("Введите число переменных (1/2): "); int vars = UI.IntInput();
+            Console.Write("Введите формулу: "); string strFormula = Console.ReadLine();
+            int leftBracket = 0;
+            int rightBracket = 0;
+            List<char> formula = new List<char>();
+            for (int i = 0; i < strFormula.Length; i++)
+            {
+                formula.Add(strFormula[i]);
+            }
+            for (int j = 0; j < formula.Count; j++)
+            {
+                Console.WriteLine(formula[j]);
+            }
+            for (int z = 0; z < formula.Count - 1; z++)
+            {
+                if (forbiddenCombs.Contains(formula[z].ToString() + formula[z + 1].ToString()))
+                {
+                    check = false;
+                    return;
+                }
+            }
+            if (formula.Count == 0)
+            {
+                check = false;
+                return;
+            }
+
+            for (int i = 0; i < formula.Count; i++)
+            {
+                if (formula[i] == '(')
+                {
+                    leftBracket++;
+                }
+                else if (formula[i] == ')')
+                {
+                    rightBracket++;
+                }
+            }
+            if (leftBracket != rightBracket)
+            {
+                check = false;
+                return;
+            }
+            if(vars == 1 && formula.Contains('x') && formula.Contains('y'))
+            {
+                check = false;
+                return;
+            }
+            for (int i = 0; i < formula.Count; i++)
+            {
+                if (!(Char.IsDigit(formula[i])) && !(permittedSymbolsForFunction.Contains(formula[i])))
+                {
+                    check = false;
+                    return;
+                }
+            }
+
+
+        }
+
     }
 }

@@ -2,7 +2,7 @@
 
 namespace program
 {
-    public class Interface
+    public class UI
     {
         public static int IntInput()
         {
@@ -31,15 +31,22 @@ namespace program
         int n;
         public static int[] firstColumn;
         public static int[] secondColumn;
+        public static int[] resultColumn;
 
+        public static string formula = "2x_y";
         static void Main(string[] args)
         {
-
-
-            Computing.CreateColumns(7, ref firstColumn, ref secondColumn);
-            for (int i = 0; i < 49; i++)
+            bool check = true;
+            Computing.FormulaEnter(ref check);
+            if(!check)
             {
-                Console.WriteLine($" {firstColumn[i]}   {secondColumn[i]}");
+                Console.WriteLine("Неправильный ввод.");
+            }
+            Computing.CreateColumns(3, ref firstColumn, ref secondColumn);
+            Computing.ResultColumn(3, ref resultColumn, firstColumn, secondColumn);
+            for (int i = 0; i < 9; i++)
+            {
+                Console.WriteLine($" {firstColumn[i]}   {secondColumn[i]}   {resultColumn[i]}");
             }
         }
 
