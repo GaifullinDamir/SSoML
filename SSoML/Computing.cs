@@ -135,8 +135,33 @@ namespace program
                 }
             }
 
-
-        }
+            SortedDictionary<int, int> bracketsDict = new SortedDictionary<int, int>();
+            var keysList = bracketsDict.Keys.ToList();
+            int current = 0;
+            for (int i = 0; i < formula.Count; i++)
+            {
+                if(formula[i] == '(')
+                {
+                    current = i;
+                    bracketsDict.Add(current, -1);
+                }
+                else if (formula[i] == ')')
+                {
+                    bracketsDict[current] = i;
+                    keysList = bracketsDict.Keys.ToList();
+                    if(current != keysList[0])
+                    {
+                        current = keysList[keysList.IndexOf(current) - 1];
+                    }
+                }
+                if(bracketsDict.Values.ToList().Contains(-1))
+                {
+                    check = false;
+                    return;
+                }
+            }
+        }   
+            
 
     }
 }
