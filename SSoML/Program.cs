@@ -23,14 +23,6 @@ namespace program
         }
     }
 
-    public class UI
-    {
-       
-
-
-    }
-
-
     class Program
     {
         private static List<char> permittedSymbolsForFunction = new List<char>() { '(', ')', '_', '/', 'x', 'y' };
@@ -346,11 +338,15 @@ namespace program
             {
                 if (formula[l] == '_' && formula[l + 1] != '(')
                 {
-                    if ((!formula.Contains("(_x)")) && (!formula.Contains("(_y)")) && (!formula.Contains($"(_{Char.IsDigit(formula[l])})")))
+                    if ((!formula.Contains("(_x)")) && (!formula.Contains("(_y)")) && (!formula.Contains($"(_{Char.IsDigit(formula[l + 1])})")))
                     {
                         formula = formula.Insert(l, "(");
                         formula = formula.Insert(l + 3, ")");
-                        return;
+                        if (!formula.Contains("/x/") && !formula.Contains("/y/"))
+                        {
+                            return;
+
+                        }
                     }
                 }
             }
@@ -527,17 +523,21 @@ namespace program
         public static void CheckSet()
         {
             Console.WriteLine($"\nВведите множество для проверки через пробел (0 2 5): ");
-            string set = Console.ReadLine();
-            int numbersCount = 0;
-            setArray = new int[set.Length];
-            for (int i = 0; i < set.Length; i++)
-            {
-                if (char.IsDigit(set[i]))
-                {
-                    setArray[numbersCount] = set[i] - '0';
-                    numbersCount += 1;
-                }
-            }
+            var setArray = Console.ReadLine()
+                .Split(new char[] {' ', ',' }, StringSplitOptions.RemoveEmptyEntries)
+                .Select(x=> Convert.ToInt32(x))
+                .Distinct();
+
+            //int numbersCount = 0;
+            /*etArray = new int[set.Length];*/
+            //for (int i = 0; i < set.Length; i++)
+            //{
+            //    if (char.IsDigit(set[i]))
+            //    {
+            //        setArray[numbersCount] = set[i] - '0';
+            //        numbersCount += 1;
+            //    }
+            //}
             resultsCount = 0;
             int saveCount = 0;
             Console.WriteLine($"Строки, сохраняющие множество:\n| X | Y | f(x,y)");
@@ -547,36 +547,55 @@ namespace program
                 {
                     for (int j = 0; j < k; j++)
                     {
-                        if (setArray.Contains(valueXColumn[i]) && setArray.Contains(valueYColumn[j]) && setArray.Contains(resultsColumn[resultsCount]))
+                        if (setArray.Contains(valueXColumn[i]) && setArray.Contains(valueYColumn[j])/* && setArray.Contains(resultsColumn[resultsCount])*/)
                         {
-                            Console.WriteLine($"| {valueXColumn[i]} | {valueYColumn[j]} | {resultsColumn[resultsCount]}");
-                            saveCount++;
+                            if (setArray.Contains(resultsColumn[resultsCount]))
+                            {
+                                Console.WriteLine($"| {valueXColumn[i]} | {valueYColumn[j]} | {resultsColumn[resultsCount]}");
+                                saveCount++;
+                            }
+                            else
+                            {
+                                Console.WriteLine("Множество не созраняется.");
+                                return;
+                            }
+                               
+                            
                         }
                         resultsCount += 1;
                     }
+                }
+                if (resultsCount == k*k)
+                {
+                    Console.WriteLine("Множество сохраняется");
                 }
             }
             else
             {
                 for (int j = 0; j < k; j++)
                 {
-                    if (setArray.Contains(valueXColumn[j]) && setArray.Contains(resultsColumn[resultsCount]))
+                    if (setArray.Contains(valueXColumn[j]))
                     {
-                        Console.WriteLine($"| {valueXColumn[j]} | {resultsColumn[resultsCount]}");
-                        saveCount++;
+                        if(setArray.Contains(resultsColumn[resultsCount]))
+                        {
+                            Console.WriteLine($"| {valueXColumn[j]} | {resultsColumn[resultsCount]}");
+                            saveCount++;
+                        }
+                        else
+                        {
+                            Console.WriteLine("Множество не созраняется.");
+                            return;
+                        }
+
                     }
                     resultsCount += k;
                 }
+                if (resultsCount == k )
+                {
+                    Console.WriteLine("Множество сохраняется");
+                }
             }
-            if (saveCount == resultsCount)
-            {
-                Console.WriteLine($"Функция сохраняет множество {{{set}}}");
-            }
-            else
-            {
-                Console.WriteLine($"Функция не сохраняет множество {{{set}}}");
-            }
-            Console.ReadKey();
+            //Console.ReadKey();
         }
     }
 }
