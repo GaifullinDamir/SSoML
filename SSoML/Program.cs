@@ -327,20 +327,43 @@ namespace program
 
         #endregion
 
+        public static bool IsDigitWithBrackets(string subformulas)
+        {
+            if (subformulas.Contains("(_0)") || subformulas.Contains("(_1)") || subformulas.Contains("(_2)") || subformulas.Contains("(_3)") ||
+                subformulas.Contains("(_4)") || subformulas.Contains("(_5)") || subformulas.Contains("(_6)") ||
+                subformulas.Contains("(_7)") || subformulas.Contains("(_8)") || subformulas.Contains("(_9)"))
+            {
+                return true;
+            }
+            else
+                return false;
+        }
+
+        public static bool IsDigitWithStripes(string subformulas)
+        {
+            if (subformulas.Contains("/0/") || subformulas.Contains("/1/") || subformulas.Contains("/2/") || subformulas.Contains("/3/") ||
+               subformulas.Contains("/4/") || subformulas.Contains("/5/") || subformulas.Contains("/6/") ||
+               subformulas.Contains("/7/") || subformulas.Contains("/8/") || subformulas.Contains("/9/"))
+            {
+                return true;
+            }
+            else
+                return false;
+        }
         public static void AddBrackets(ref string formula) //Функция, добавляющая скобки для приоритета
         {
             for (int l = 0; l < formula.Length - 1; l++)
             {
                 if (formula[l] == '_' && formula[l + 1] != '(')
                 {
-                    if ((!formula.Contains("(_x)")) && (!formula.Contains("(_y)")) && (!formula.Contains($"(_{Char.IsDigit(formula[l + 1])})")))
+                    if ((!formula.Contains("(_x)")) && (!formula.Contains("(_y)")) && 
+                        !IsDigitWithBrackets(formula))
                     {
                         formula = formula.Insert(l, "(");
                         formula = formula.Insert(l + 3, ")");
-                        if (!formula.Contains("/x/") && !formula.Contains("/y/"))
+                        if (!formula.Contains("/x/") && !formula.Contains("/y/") && !IsDigitWithStripes(formula))
                         {
                             return;
-
                         }
                     }
                 }
