@@ -484,7 +484,7 @@ namespace program
             resultsCount = 0;
             int current;
             string form = "";
-            Console.WriteLine("\n2я форма (один из аналогов полинома Жегалкина):");
+            Console.WriteLine("\n2-я форма:");
             for (int i = 0; i < k; i++)
             {
                 current = results[resultsCount];
@@ -528,16 +528,6 @@ namespace program
                 .Select(x=> Convert.ToInt32(x))
                 .Distinct();
 
-            //int numbersCount = 0;
-            /*etArray = new int[set.Length];*/
-            //for (int i = 0; i < set.Length; i++)
-            //{
-            //    if (char.IsDigit(set[i]))
-            //    {
-            //        setArray[numbersCount] = set[i] - '0';
-            //        numbersCount += 1;
-            //    }
-            //}
             resultsCount = 0;
             int saveCount = 0;
             Console.WriteLine($"Строки, сохраняющие множество:\n| X | Y | f(x,y)");
@@ -559,8 +549,6 @@ namespace program
                                 Console.WriteLine("Множество не созраняется.");
                                 return;
                             }
-                               
-                            
                         }
                         resultsCount += 1;
                     }
@@ -586,7 +574,6 @@ namespace program
                             Console.WriteLine("Множество не созраняется.");
                             return;
                         }
-
                     }
                     resultsCount += k;
                 }
