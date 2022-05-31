@@ -36,7 +36,7 @@ namespace program
         public static int[] valueYColumn;
         public static int[] resultsColumn;
         public static int resultsCount;
-        public static int[] setArray;
+        //public static int[] setArray;
         public static int countNumbers = 0;
         public static List bracketsList; // список для скобочек вместе с их индексами
         public static int countLeftBrackets = 0; // число (
@@ -49,7 +49,6 @@ namespace program
             bool run = true;
             while (run)
             {
-
                 while (k < 1 || k > 7)
                 {
                     Console.WriteLine("Введите  1 < k < 8");
@@ -105,9 +104,6 @@ namespace program
                     run = false;
                 }
             }
-
-
-
         }
         public static void ShowMenu()
         {
@@ -151,92 +147,91 @@ namespace program
                     int y = valueYColumn[j];
                     int result = -1;
                     formula = inputFormula;
-
                     while (formula.Length != 1) // начинаем вычисление для x = i, y = j
                     {
-                        AddBrackets(ref formula);
-                        BracketsCount(formula); // всегда обновляем кол-во скобочек
+                        AddBrackets(ref formula); //добавляем скобки для приоритета
+                        BracketsCount(formula); // обновляем количество скобок
                         List current = bracketsList;
                         while (current.pNext.key != ')')
                         {
                             current = current.pNext;
                         }
-                        string MicroFormula = "";
+                        string subformulas = ""; //Строка для хранения формулы для текущего вычисления
                         for (int t = current.index + 1; t < current.pNext.index; t++)
                         {
-                            MicroFormula += formula[t]; // определяем текущее действие(по индексам скобочек)
+                            subformulas += formula[t]; // выбираем выражение для решения при попомщи списка скобок
                         }
 
-                        if (MicroFormula.Contains("(") || MicroFormula.Contains(")"))
+                        if (subformulas.Contains("(") || subformulas.Contains(")"))
                         {
                             Console.WriteLine("Ошибка ввода.");
                             return;
                         }
-                        if (MicroFormula.Length == 1) // если действие состоит из одного элемента, определяем значение
+                        if (subformulas.Length == 1) // Если действие состоит из одной переменной, просто присваиваем её значение
                         {
-                            if (MicroFormula == "x")
+                            if (subformulas == "x")
                             {
                                 result = x;
                             }
-                            else if (MicroFormula == "y")
+                            else if (subformulas == "y")
                             {
                                 result = y;
                             }
                         }
-                        else if (MicroFormula[0] == '_') // если действие J, вызываем соотв. функцию
+                        else if (subformulas[0] == '_') // Если действием является отрицание Поста, вызываем соответсвующие функции
                         {
-                            if (MicroFormula.Length != 2)
+                            if (subformulas.Length != 2)
                             {
                                 Console.WriteLine("Ошибка ввода.");
                                 return;
                             }
-                            if (MicroFormula[1] == 'x')
+                            if (subformulas[1] == 'x')
                             {
                                 result = DenialOfPost(x, k);
                             }
-                            else if (MicroFormula[1] == 'y')
+                            else if (subformulas[1] == 'y')
                             {
                                 result = DenialOfPost(y, k);
                             }
-                            else if (Char.IsDigit(MicroFormula[1]))
+                            else if (Char.IsDigit(subformulas[1]))
                             {
-                                result = DenialOfPost(MicroFormula[1] - '0', k);
+                                result = DenialOfPost(subformulas[1] - '0', k);
                             }
                         }
 
-                        else // иначе вызываем x=>y
+                        else // Иначе вызываем функцию обработки усеченной разности
                         {
-                            if (MicroFormula.Length != 3)
+                            if (subformulas.Length != 3)
                             {
                                 Console.WriteLine("Ошибка ввода.");
                                 return;
                             }
-                            result = TrunDifference(x, y, MicroFormula, k);
+                            result = TrunDifference(x, y, subformulas, k);
 
                         }
-                        formula = formula.Remove(current.index, current.pNext.index - current.index + 1); // удаляем выполненное действие
-                        formula = formula.Insert(current.index, result.ToString()); // вставляем полученное в действии значение
-                        List.pop(bracketsList, current.index); // удаляем скобочки
+                        formula = formula.Remove(current.index, current.pNext.index - current.index + 1); // Удаляем выполненное действие из основной формулы
+                        formula = formula.Insert(current.index, result.ToString()); // Заместо него вставляем значение, полученное в ходе решения
+                        List.pop(bracketsList, current.index); // Удаляем скобки из выражения
                         List.pop(bracketsList, current.pNext.index);
-                        countBrackets -= 2;
+                        countBrackets -= 2; 
                     }
-                    resultsColumn[resultsCount] = result; // заносим в массив результатов
+                    resultsColumn[resultsCount] = result; // Заносим полученное значение в массив результатов
                     resultsCount += 1;
                 }
             }
-            if (n == 2)
+            if (n == 2) // Вывод для 2-х переменных + 2-я форма
             {
-                PrintTwoVariable(valueXColumn, valueYColumn, resultsColumn);
+                PrintTwoVariable(valueXColumn, valueYColumn, resultsColumn);   
                 SecondFormTwoVariables(valueXColumn, valueYColumn, resultsColumn);
             }
-            else
+            else // Вывод для 1-ой переменных + 2-я форма
             {
                 PrintOneVariable(valueXColumn, resultsColumn);
                 SecondFormOneVariable(valueXColumn, resultsColumn);
             }
         }
         #region Calculate methods
-        public static int TrunDifference(int x, int y, string formula, int k)
+        public static int TrunDifference(int x, int y, string formula, int k) //Усеченная разность
         {
             if (formula[0] == 'x' && formula[2] == 'x')
             {
@@ -324,16 +319,16 @@ namespace program
                 }
             }
             return -1;
-        } // нахождение x/y
-        public static int DenialOfPost(int x, int k)
+        } 
+        public static int DenialOfPost(int x, int k) // Отрицание Поста
         {
             return (x + 1) % k;
-        } // _x
+        } 
 
         #endregion
-        public static void AddBrackets(ref string formula)
-        {
 
+        public static void AddBrackets(ref string formula) //Функция, добавляющая скобки для приоритета
+        {
             for (int l = 0; l < formula.Length - 1; l++)
             {
                 if (formula[l] == '_' && formula[l + 1] != '(')
@@ -370,7 +365,7 @@ namespace program
             }
         }
 
-        public static void BracketsCount(string formula) // подсчет скобок
+        public static void BracketsCount(string formula) // Функция, подсчитывающая количество скобок
         {
             bracketsList = new List();
             bracketsList.pNext = null;
@@ -408,7 +403,7 @@ namespace program
             }
         }
 
-        public static void PrintTwoVariable(int[] valuex, int[] valuey, int[] results) // вывод для двух перменных
+        public static void PrintTwoVariable(int[] valuex, int[] valuey, int[] results) // Вывод таблицы для 2-ч переменных
         {
             resultsCount = 0;
             Console.WriteLine($"| X | Y | {inputFormula} |");
@@ -423,7 +418,7 @@ namespace program
                 }
             }
         }
-        public static void PrintOneVariable(int[] valuex, int[] results) // вывод для одной переменной
+        public static void PrintOneVariable(int[] valuex, int[] results) // Вывод таблицы для одной переменной
         {
             resultsCount = 0;
             Console.WriteLine($"| X | {inputFormula} |");
@@ -435,7 +430,7 @@ namespace program
             }
         }
 
-        public static void SecondFormTwoVariables(int[] valuex, int[] valuey, int[] results)
+        public static void SecondFormTwoVariables(int[] valuex, int[] valuey, int[] results) //Нахождение 2-ой формы для двух переменных
         {
             resultsCount = 0;
             int current;
@@ -479,7 +474,7 @@ namespace program
             Console.WriteLine(form + "\n");
         }
 
-        public static void SecondFormOneVariable(int[] valuex, int[] results)
+        public static void SecondFormOneVariable(int[] valuex, int[] results) // Нахождение 2-ой для одной переменной 
         {
             resultsCount = 0;
             int current;
@@ -520,7 +515,7 @@ namespace program
             Console.WriteLine(form + "\n");
         }
 
-        public static void CheckSet()
+        public static void CheckSet() // Проверка на сохранение множества
         {
             Console.WriteLine($"\nВведите множество для проверки через пробел (0 2 5): ");
             var setArray = Console.ReadLine()
@@ -537,7 +532,7 @@ namespace program
                 {
                     for (int j = 0; j < k; j++)
                     {
-                        if (setArray.Contains(valueXColumn[i]) && setArray.Contains(valueYColumn[j])/* && setArray.Contains(resultsColumn[resultsCount])*/)
+                        if (setArray.Contains(valueXColumn[i]) && setArray.Contains(valueYColumn[j]))
                         {
                             if (setArray.Contains(resultsColumn[resultsCount]))
                             {
@@ -546,7 +541,7 @@ namespace program
                             }
                             else
                             {
-                                Console.WriteLine("Множество не созраняется.");
+                                Console.WriteLine("Множество не сохраняется.");
                                 return;
                             }
                         }
